@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>24 Dates × 15 Formats × Top 10 Languages (RU→UA)</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
+    h1 { margin: 0 0 8px; font-size: 20px; }
+    p { margin: 0 0 16px; opacity: 0.9; }
+    .wrap { overflow: auto; border: 1px solid rgba(127,127,127,.35); border-radius: 12px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1400px; }
+    th, td { border-bottom: 1px solid rgba(127,127,127,.25); padding: 10px 12px; vertical-align: top; }
+    th { position: sticky; top: 0; background: Canvas; z-index: 2; text-align: left; }
+    .sticky { position: sticky; left: 0; background: Canvas; z-index: 3; }
+    .sticky2 { position: sticky; left: 210px; background: Canvas; z-index: 3; }
+    .meta { font-size: 12px; opacity: .8; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35); font-size: 12px; opacity: .9; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+  <h1>24 dates (2 per month) in 15 formats &amp; 10 languages</h1>
+  <p class="meta">
+    Rule: for each month, one day &lt; 10 and one day &gt; 10. Year used: <span class="tag">2026</span>
+  </p>
+
+  <div class="wrap">
+    <table id="tbl">
+      <thead id="thead"></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+<script>
+const YEAR = 2026;
+
+// Two dates per month: one <10, one >10
+const samples = [
+  { m: 1,  d: 3  }, { m: 1,  d: 15 },
+  { m: 2,  d: 7  }, { m: 2,  d: 18 },
+  { m: 3,  d: 2  }, { m: 3,  d: 20 },
+  { m: 4,  d: 9  }, { m: 4,  d: 21 },
+  { m: 5,  d: 5  }, { m: 5,  d: 16 },
+  { m: 6,  d: 8  }, { m: 6,  d: 24 },
+  { m: 7,  d: 4  }, { m: 7,  d: 14 },
+  { m: 8,  d: 6  }, { m: 8,  d: 19 },
+  { m: 9,  d: 1  }, { m: 9,  d: 12 },
+  { m: 10, d: 9  }, { m: 10, d: 28 },
+  { m: 11, d: 7  }, { m: 11, d: 17 },
+  { m: 12, d: 2  }, { m: 12, d: 23 },
+];
+
+const pad2 = (n) => String(n).padStart(2, "0");
+const ordinalEn = (n) => {
+  const s = ["th","st","nd","rd"], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+};
+
+// 10 languages, with Russian replaced by Ukrainian
+const langs = [
+  {
+    key: "en",
+    country: "United States",
+    language: "English",
+    months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+    weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+  },
+  {
+    key: "zh",
+    country: "China",
+    language: "Mandarin (中文)",
+    months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+    weekdays: ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]
+  },
+  {
+    key: "hi",
+    country: "India",
+    language: "Hindi (हिन्दी)",
+    months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"],
+    weekdays: ["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"]
+  },
+  {
+    key: "es",
+    country: "Spain",
+    language: "Spanish (Español)",
+    months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],
+    weekdays: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
+  },
+  {
+    key: "fr",
+    country: "France",
+    language: "French (Français)",
+    months: ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+    weekdays: ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]
+  },
+  {
+    key: "ar",
+    country: "Saudi Arabia",
+    language: "Arabic (العربية)",
+    months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"],
+    weekdays: ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]
+  },
+  {
+    key: "bn",
+    country: "Bangladesh",
+    language: "Bengali (বাংলা)",
+    months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],
+    weekdays: ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"]
+  },
+  {
+    key: "pt",
+    country: "Brazil",
+    language: "Portuguese (Português)",
+    months: ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],
+    weekdays: ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"]
+  },
+  {
+    key: "uk",
+    country: "Ukraine",
+    language: "Ukrainian (Українська)",
+    months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"],
+    weekdays: ["неділя","понеділок","вівторок","середа","четвер","пʼятниця","субота"]
+  },
+  {
+    key: "ur",
+    country: "Pakistan",
+    language: "Urdu (اردو)",
+    months: ["جنوری","فروری","مارچ","اپریل","مئی","جون","جولائی","اگست","ستمبر","اکتوبر","نومبر","دسمبر"],
+    weekdays: ["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"]
+  }
+];
+
+// Helper for "short month" display
+function shortMonth(pack, m) {
+  const full = pack.months[m-1];
+  if (pack.key === "zh") return full; // already compact
+  if (full.length <= 4) return full;
+  return full.slice(0, 3) + ".";
+}
+
+// Day-of-week (UTC, stable)
+function weekdayIndexUTC(y, m, d) {
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCDay(); // 0=Sun .. 6=Sat
+}
+
+// 15 formats total (added 5+ more)
+const formats = [
+  { name: "1) ISO 8601", fn: (y,m,d,pack,wd) => `${y}-${pad2(m)}-${pad2(d)}` },
+  { name: "2) DD-MM-YYYY", fn: (y,m,d) => `${pad2(d)}-${pad2(m)}-${y}` },
+  { name: "3) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
+  { name: "4) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
+  { name: "5) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
+
+  { name: "6) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
+  { name: "7) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
+  { name: "8) D MMMM YYYY", fn: (y,m,d,pack) => `${d} ${pack.months[m-1]} ${y}` },
+  { name: "9) Weekday, D MMMM YYYY", fn: (y,m,d,pack,wd) => `${pack.weekdays[wd]}, ${d} ${pack.months[m-1]} ${y}` },
+  { name: "10) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
+
+  // Added formats (5+)
+  { name: "11) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
+  { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
+  { name: "13) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
+  { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` },
+  {
+    name: "15) English ordinal: MMMM Do, YYYY",
+    fn: (y,m,d,pack) => (pack.key === "en")
+      ? `${pack.months[m-1]} ${ordinalEn(d)}, ${y}`
+      : `${pack.months[m-1]} ${d}, ${y}`
+  },
+];
+
+// Build header
+const thead = document.getElementById("thead");
+const headerRow = document.createElement("tr");
+
+const thLabel = document.createElement("th");
+thLabel.className = "sticky";
+thLabel.style.minWidth = "210px";
+thLabel.textContent = "Date (month/day)";
+headerRow.appendChild(thLabel);
+
+const thFormat = document.createElement("th");
+thFormat.className = "sticky2";
+thFormat.style.minWidth = "300px";
+thFormat.textContent = "Format";
+headerRow.appendChild(thFormat);
+
+for (const pack of langs) {
+  const th = document.createElement("th");
+  th.style.minWidth = "220px";
+  th.innerHTML = `<div><strong>${pack.country}</strong></div><div class="meta">${pack.language}</div>`;
+  headerRow.appendChild(th);
+}
+thead.appendChild(headerRow);
+
+// Build body: 24 samples × 15 formats = 360 rows
+const tbody = document.getElementById("tbody");
+
+for (const s of samples) {
+  const { m, d } = s;
+  const wd = weekdayIndexUTC(YEAR, m, d);
+
+  for (const f of formats) {
+    const tr = document.createElement("tr");
+
+    const tdLabel = document.createElement("td");
+    tdLabel.className = "sticky mono";
+    tdLabel.textContent = `${pad2(m)}/${pad2(d)}`;
+    tr.appendChild(tdLabel);
+
+    const tdFmt = document.createElement("td");
+    tdFmt.className = "sticky2";
+    tdFmt.innerHTML = `<span class="tag">${f.name}</span>`;
+    tr.appendChild(tdFmt);
+
+    for (const pack of langs) {
+      const td = document.createElement("td");
+      td.className = "mono";
+      td.textContent = f.fn(YEAR, m, d, pack, wd);
+      tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
+  }
+}
+</script>
+</body>
+</html>
