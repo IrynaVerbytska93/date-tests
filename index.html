@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>24 Dates × 13 Formats × 9 Languages</title>
+  <title>4 Dates × 13 Formats × 9 Languages</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
@@ -21,9 +21,9 @@
   </style>
 </head>
 <body>
-  <h1>24 dates (2 per month) in 13 formats &amp; 9 languages</h1>
+  <h1>4 dates (Jan &amp; Apr) in 13 formats &amp; 9 languages</h1>
   <p class="meta">
-    Rule: for each month, one day &lt; 10 and one day &gt; 10. Year used: <span class="tag">2026</span>
+    Rule: January and April, one day &lt; 10 and one day &gt; 10. Year used: <span class="tag">2026</span>
   </p>
 
   <div class="wrap">
@@ -36,19 +36,10 @@
 <script>
 const YEAR = 2026;
 
+// Left only January (1) and April (4)
 const samples = [
   { m: 1,  d: 3  }, { m: 1,  d: 15 },
-  { m: 2,  d: 7  }, { m: 2,  d: 18 },
-  { m: 3,  d: 2  }, { m: 3,  d: 20 },
-  { m: 4,  d: 9  }, { m: 4,  d: 21 },
-  { m: 5,  d: 5  }, { m: 5,  d: 16 },
-  { m: 6,  d: 8  }, { m: 6,  d: 24 },
-  { m: 7,  d: 4  }, { m: 7,  d: 14 },
-  { m: 8,  d: 6  }, { m: 8,  d: 19 },
-  { m: 9,  d: 1  }, { m: 9,  d: 12 },
-  { m: 10, d: 9  }, { m: 10, d: 28 },
-  { m: 11, d: 7  }, { m: 11, d: 17 },
-  { m: 12, d: 2  }, { m: 12, d: 23 },
+  { m: 4,  d: 9  }, { m: 4,  d: 21 }
 ];
 
 const pad2 = (n) => String(n).padStart(2, "0");
@@ -58,71 +49,61 @@ const langs = [
     key: "en",
     country: "United States",
     language: "English",
-    months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-    weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    months: ["January","February","March","April","May","June","July","August","September","October","November","December"]
   },
   {
     key: "zh",
     country: "China",
     language: "Mandarin (中文)",
-    months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
-    weekdays: ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]
+    months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
   },
   {
     key: "hi",
     country: "India",
     language: "Hindi (हिन्दी)",
-    months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"],
-    weekdays: ["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"]
+    months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"]
   },
   {
     key: "es",
     country: "Spain",
     language: "Spanish (Español)",
-    months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],
-    weekdays: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
+    months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
   },
   {
     key: "de",
     country: "Germany",
     language: "German (Deutsch)",
-    months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
-    weekdays: ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]
+    months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
   },
   {
     key: "ar",
     country: "Saudi Arabia",
     language: "Arabic (العربية)",
-    months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"],
-    weekdays: ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]
+    months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]
   },
   {
     key: "bn",
     country: "Bangladesh",
     language: "Bengali (বাংলা)",
-    months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],
-    weekdays: ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"]
+    months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"]
   },
   {
     key: "pt",
     country: "Brazil",
     language: "Portuguese (Português)",
-    months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"],
-    weekdays: ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"]
+    months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"]
   },
   {
     key: "uk",
     country: "Ukraine",
     language: "Ukrainian (Українська)",
-    months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"],
-    weekdays: ["неділя","понеділок","вівторок","середа","четвер","пʼятниця","субота"]
+    months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"]
   }
 ];
 
 function shortMonth(pack, m) {
   const full = pack.months[m-1];
   if (pack.key === "zh") return full;
-  if (pack.key === "de" && full === "März") return "März"; 
   if (full.length <= 4) return full;
   return full.slice(0, 3) + ".";
 }
@@ -136,11 +117,11 @@ const formats = [
   { name: "6) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
   { name: "7) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
   { name: "8) D MMMM YYYY", fn: (y,m,d,pack) => `${d} ${pack.months[m-1]} ${y}` },
-  { name: "10) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
-  { name: "11) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
-  { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
-  { name: "13) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
-  { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` }
+  { name: "9) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
+  { name: "10) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
+  { name: "11) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
+  { name: "12) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
+  { name: "13) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` }
 ];
 
 const thead = document.getElementById("thead");
