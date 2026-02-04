@@ -1,12 +1,9 @@
-
-HTML
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>4 Dates × 12 Formats × 8 Languages</title>
+  <title>12 Dates × 12 Formats × 8 Languages</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
@@ -24,8 +21,8 @@ HTML
   </style>
 </head>
 <body>
-  <h1>4 dates in 12 formats &amp; 8 languages</h1>
-  <p class="meta">Jan &amp; Apr | Germany focus | Year: <span class="tag">2026</span></p>
+  <h1>12 unique dates in 12 formats &amp; 8 languages</h1>
+  <p class="meta">Dates: Jan 1st - Jan 12th | Germany &amp; Ukraine focus | Year: <span class="tag">2026</span></p>
 
   <div class="wrap">
     <table id="tbl">
@@ -36,26 +33,18 @@ HTML
 
 <script>
 const YEAR = 2026;
-const samples = [{ m: 1, d: 3 }, { m: 1, d: 15 }, { m: 4, d: 9 }, { m: 4, d: 21 }];
+const MONTH = 1; // January only
 const pad2 = (n) => String(n).padStart(2, "0");
 
 const langs = [
-  { key: "en", country: "United States", language: "English", 
-    months: ["January","February","March","April","May","June","July","August","September","October","November","December"] },
-  { key: "zh", country: "China", language: "Mandarin (中文)", 
-    months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"] },
-  { key: "hi", country: "India", language: "Hindi (हिन्दी)", 
-    months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
-  { key: "es", country: "Spain", language: "Spanish (Español)", 
-    months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
-  { key: "de", country: "Germany", language: "German (Deutsch)", 
-    months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
-  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", 
-    months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
-  { key: "pt", country: "Brazil", language: "Portuguese (Português)", 
-    months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"] },
-  { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", 
-    months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
+  { key: "en", country: "United States", language: "English", months: ["January","February","March","April","May","June","July","August","September","October","November","December"] },
+  { key: "zh", country: "China", language: "Mandarin (中文)", months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"] },
+  { key: "hi", country: "India", language: "Hindi (हिन्दी)", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
+  { key: "es", country: "Spain", language: "Spanish (Español)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
+  { key: "de", country: "Germany", language: "German (Deutsch)", months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
+  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
+  { key: "pt", country: "Brazil", language: "Portuguese (Português)", months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"] },
+  { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
 ];
 
 function shortMonth(pack, m) {
@@ -64,6 +53,7 @@ function shortMonth(pack, m) {
   return full.length <= 4 ? full : full.slice(0, 3) + ".";
 }
 
+// 12 Formats, each will be assigned to a specific day 1-12
 const formats = [
   { name: "1) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
   { name: "2) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
@@ -91,18 +81,22 @@ langs.forEach(l => {
 thead.appendChild(headerRow);
 
 const tbody = document.getElementById("tbody");
-samples.forEach(s => {
-  formats.forEach(f => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="sticky mono">${pad2(s.m)}/${pad2(s.d)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
-    langs.forEach(p => {
-      const td = document.createElement("td");
-      td.className = "mono";
-      td.textContent = f.fn(YEAR, s.m, s.d, p);
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+
+// Loop through each format and assign it a unique day from 1 to 12
+formats.forEach((f, index) => {
+  const day = index + 1; // Day 1 for Format 1, Day 2 for Format 2, etc.
+  const tr = document.createElement("tr");
+  
+  tr.innerHTML = `<td class="sticky mono">${pad2(MONTH)}/${pad2(day)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
+  
+  langs.forEach(p => {
+    const td = document.createElement("td");
+    td.className = "mono";
+    td.textContent = f.fn(YEAR, MONTH, day, p);
+    tr.appendChild(td);
   });
+  
+  tbody.appendChild(tr);
 });
 </script>
 </body>
