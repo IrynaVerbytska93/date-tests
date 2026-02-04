@@ -21,10 +21,8 @@
   </style>
 </head>
 <body>
-  <h1>4 dates (Jan &amp; Apr) in 13 formats &amp; 8 languages</h1>
-  <p class="meta">
-    Rule: January and April, one day &lt; 10 and one day &gt; 10. Year used: <span class="tag">2026</span>
-  </p>
+  <h1>4 dates in 13 formats &amp; 8 languages</h1>
+  <p class="meta">Jan &amp; Apr (Days < 10 &amp; > 10) | Year: <span class="tag">2026</span></p>
 
   <div class="wrap">
     <table id="tbl">
@@ -35,138 +33,66 @@
 
 <script>
 const YEAR = 2026;
-
-const samples = [
-  { m: 1,  d: 3  }, { m: 1,  d: 15 },
-  { m: 4,  d: 9  }, { m: 4,  d: 21 }
-];
-
+const samples = [{ m: 1, d: 3 }, { m: 1, d: 15 }, { m: 4, d: 9 }, { m: 4, d: 21 }];
 const pad2 = (n) => String(n).padStart(2, "0");
 
 const langs = [
-  {
-    key: "en",
-    country: "United States",
-    language: "English",
-    months: ["January","February","March","April","May","June","July","August","September","October","November","December"]
-  },
-  {
-    key: "zh",
-    country: "China",
-    language: "Mandarin (中文)",
-    months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
-  },
-  {
-    key: "hi",
-    country: "India",
-    language: "Hindi (हिन्दी)",
-    months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"]
-  },
-  {
-    key: "es",
-    country: "Spain",
-    language: "Spanish (Español)",
-    months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
-  },
-  {
-    key: "de",
-    country: "Germany",
-    language: "German (Deutsch)",
-    months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
-  },
-  {
-    key: "ar",
-    country: "Saudi Arabia",
-    language: "Arabic (العربية)",
-    months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]
-  },
-  {
-    key: "pt",
-    country: "Brazil",
-    language: "Portuguese (Português)",
-    months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"]
-  },
-  {
-    key: "uk",
-    country: "Ukraine",
-    language: "Ukrainian (Українська)",
-    months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"]
-  }
+  { key: "en", country: "United States", language: "English", months: ["January","February","March","April","May","June","July","August","September","October","November","December"] },
+  { key: "zh", country: "China", language: "Mandarin (中文)", months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"] },
+  { key: "hi", country: "India", language: "Hindi (हिन्दी)", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
+  { key: "es", country: "Spain", language: "Spanish (Español)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
+  { key: "de", country: "Germany", language: "German (Deutsch)", months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
+  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
+  { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
 ];
 
 function shortMonth(pack, m) {
   const full = pack.months[m-1];
   if (pack.key === "zh") return full;
-  if (full.length <= 4) return full;
-  return full.slice(0, 3) + ".";
+  return full.length <= 4 ? full : full.slice(0, 3) + ".";
 }
 
 const formats = [
-  { name: "1) ISO 8601", fn: (y,m,d) => `${y}-${pad2(m)}-${pad2(d)}` },
-  { name: "2) DD-MM-YYYY", fn: (y,m,d) => `${pad2(d)}-${pad2(m)}-${y}` },
-  { name: "3) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
-  { name: "4) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
-  { name: "5) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
-  { name: "6) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
-  { name: "7) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
-  { name: "8) D MMMM YYYY", fn: (y,m,d,pack) => `${d} ${pack.months[m-1]} ${y}` },
-  { name: "9) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
-  { name: "10) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
-  { name: "11) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
-  { name: "12) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
-  { name: "13) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` }
+  { name: "1) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
+  { name: "2) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
+  { name: "3) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
+  { name: "4) YYYY-MM-DD", fn: (y,m,d) => `${y}-${pad2(m)}-${pad2(d)}` },
+  { name: "5) MMMM DD, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${pad2(d)}, ${y}` },
+  { name: "6) DD MMMM YYYY", fn: (y,m,d,pack) => `${pad2(d)} ${pack.months[m-1]} ${y}` },
+  { name: "7) DD-MMM-YYYY", fn: (y,m,d,pack) => `${pad2(d)}-${shortMonth(pack, m).replace('.','')}-${y}` },
+  { name: "8) MM-DD-YYYY", fn: (y,m,d) => `${pad2(m)}-${pad2(d)}-${y}` },
+  { name: "9) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
+  { name: "10) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
+  { name: "11) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
+  { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
+  { name: "13) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` }
 ];
 
 const thead = document.getElementById("thead");
 const headerRow = document.createElement("tr");
-
-const thLabel = document.createElement("th");
-thLabel.className = "sticky";
-thLabel.style.minWidth = "210px";
-thLabel.textContent = "Date (month/day)";
-headerRow.appendChild(thLabel);
-
-const thFormat = document.createElement("th");
-thFormat.className = "sticky2";
-thFormat.style.minWidth = "300px";
-thFormat.textContent = "Format";
-headerRow.appendChild(thFormat);
-
-for (const pack of langs) {
+headerRow.innerHTML = `<th class="sticky" style="min-width:210px">Date (month/day)</th><th class="sticky2" style="min-width:300px">Format</th>`;
+langs.forEach(l => {
   const th = document.createElement("th");
   th.style.minWidth = "220px";
-  th.innerHTML = `<div><strong>${pack.country}</strong></div><div class="meta">${pack.language}</div>`;
+  th.innerHTML = `<div><strong>${l.country}</strong></div><div class="meta">${l.language}</div>`;
   headerRow.appendChild(th);
-}
+});
 thead.appendChild(headerRow);
 
 const tbody = document.getElementById("tbody");
-
-for (const s of samples) {
-  const { m, d } = s;
-
-  for (const f of formats) {
+samples.forEach(s => {
+  formats.forEach(f => {
     const tr = document.createElement("tr");
-
-    const tdLabel = document.createElement("td");
-    tdLabel.className = "sticky mono";
-    tdLabel.textContent = `${pad2(m)}/${pad2(d)}`;
-    tr.appendChild(tdLabel);
-
-    const tdFmt = document.createElement("td");
-    tdFmt.className = "sticky2";
-    tdFmt.innerHTML = `<span class="tag">${f.name}</span>`;
-    tr.appendChild(tdFmt);
-
-    for (const pack of langs) {
+    tr.innerHTML = `<td class="sticky mono">${pad2(s.m)}/${pad2(s.d)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
+    langs.forEach(p => {
       const td = document.createElement("td");
       td.className = "mono";
-      td.textContent = f.fn(YEAR, m, d, pack);
+      td.textContent = f.fn(YEAR, s.m, s.d, p);
       tr.appendChild(td);
-    }
+    });
     tbody.appendChild(tr);
-  }
-}
+  });
+});
 </script>
 </body>
 </html>
