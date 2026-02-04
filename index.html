@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>24 Dates × 15 Formats × Top 10 Languages (RU→UA)</title>
+  <title>24 Dates × 13 Formats × 9 Languages</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
     h1 { margin: 0 0 8px; font-size: 20px; }
     p { margin: 0 0 16px; opacity: 0.9; }
     .wrap { overflow: auto; border: 1px solid rgba(127,127,127,.35); border-radius: 12px; }
-    table { border-collapse: collapse; width: 100%; min-width: 1400px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1300px; }
     th, td { border-bottom: 1px solid rgba(127,127,127,.25); padding: 10px 12px; vertical-align: top; }
     th { position: sticky; top: 0; background: Canvas; z-index: 2; text-align: left; }
     .sticky { position: sticky; left: 0; background: Canvas; z-index: 3; }
@@ -21,7 +21,7 @@
   </style>
 </head>
 <body>
-  <h1>24 dates (2 per month) in 15 formats &amp; 10 languages</h1>
+  <h1>24 dates (2 per month) in 13 formats &amp; 9 languages</h1>
   <p class="meta">
     Rule: for each month, one day &lt; 10 and one day &gt; 10. Year used: <span class="tag">2026</span>
   </p>
@@ -36,7 +36,6 @@
 <script>
 const YEAR = 2026;
 
-// Two dates per month: one <10, one >10
 const samples = [
   { m: 1,  d: 3  }, { m: 1,  d: 15 },
   { m: 2,  d: 7  }, { m: 2,  d: 18 },
@@ -53,12 +52,7 @@ const samples = [
 ];
 
 const pad2 = (n) => String(n).padStart(2, "0");
-const ordinalEn = (n) => {
-  const s = ["th","st","nd","rd"], v = n % 100;
-  return n + (s[(v-20)%10] || s[v] || s[0]);
-};
 
-// 10 languages, with Russian replaced by Ukrainian
 const langs = [
   {
     key: "en",
@@ -89,11 +83,11 @@ const langs = [
     weekdays: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
   },
   {
-    key: "fr",
-    country: "France",
-    language: "French (Français)",
-    months: ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
-    weekdays: ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]
+    key: "de",
+    country: "Germany",
+    language: "German (Deutsch)",
+    months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+    weekdays: ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]
   },
   {
     key: "ar",
@@ -113,7 +107,7 @@ const langs = [
     key: "pt",
     country: "Brazil",
     language: "Portuguese (Português)",
-    months: ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],
+    months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"],
     weekdays: ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"]
   },
   {
@@ -122,58 +116,33 @@ const langs = [
     language: "Ukrainian (Українська)",
     months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"],
     weekdays: ["неділя","понеділок","вівторок","середа","четвер","пʼятниця","субота"]
-  },
-  {
-    key: "ur",
-    country: "Pakistan",
-    language: "Urdu (اردو)",
-    months: ["جنوری","فروری","مارچ","اپریل","مئی","جون","جولائی","اگست","ستمبر","اکتوبر","نومبر","دسمبر"],
-    weekdays: ["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"]
   }
 ];
 
-// Helper for "short month" display
 function shortMonth(pack, m) {
   const full = pack.months[m-1];
-  if (pack.key === "zh") return full; // already compact
+  if (pack.key === "zh") return full;
+  if (pack.key === "de" && full === "März") return "März"; 
   if (full.length <= 4) return full;
   return full.slice(0, 3) + ".";
 }
 
-// Day-of-week (UTC, stable)
-function weekdayIndexUTC(y, m, d) {
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  return dt.getUTCDay(); // 0=Sun .. 6=Sat
-}
-
-// 15 formats total (added 5+ more)
 const formats = [
-  { name: "1) ISO 8601", fn: (y,m,d,pack,wd) => `${y}-${pad2(m)}-${pad2(d)}` },
+  { name: "1) ISO 8601", fn: (y,m,d) => `${y}-${pad2(m)}-${pad2(d)}` },
   { name: "2) DD-MM-YYYY", fn: (y,m,d) => `${pad2(d)}-${pad2(m)}-${y}` },
   { name: "3) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
   { name: "4) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
   { name: "5) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
-
   { name: "6) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
   { name: "7) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
   { name: "8) D MMMM YYYY", fn: (y,m,d,pack) => `${d} ${pack.months[m-1]} ${y}` },
-  { name: "9) Weekday, D MMMM YYYY", fn: (y,m,d,pack,wd) => `${pack.weekdays[wd]}, ${d} ${pack.months[m-1]} ${y}` },
   { name: "10) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
-
-  // Added formats (5+)
   { name: "11) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
   { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
   { name: "13) YYYYMMDD (compact)", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
-  { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` },
-  {
-    name: "15) English ordinal: MMMM Do, YYYY",
-    fn: (y,m,d,pack) => (pack.key === "en")
-      ? `${pack.months[m-1]} ${ordinalEn(d)}, ${y}`
-      : `${pack.months[m-1]} ${d}, ${y}`
-  },
+  { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` }
 ];
 
-// Build header
 const thead = document.getElementById("thead");
 const headerRow = document.createElement("tr");
 
@@ -197,12 +166,10 @@ for (const pack of langs) {
 }
 thead.appendChild(headerRow);
 
-// Build body: 24 samples × 15 formats = 360 rows
 const tbody = document.getElementById("tbody");
 
 for (const s of samples) {
   const { m, d } = s;
-  const wd = weekdayIndexUTC(YEAR, m, d);
 
   for (const f of formats) {
     const tr = document.createElement("tr");
@@ -220,10 +187,9 @@ for (const s of samples) {
     for (const pack of langs) {
       const td = document.createElement("td");
       td.className = "mono";
-      td.textContent = f.fn(YEAR, m, d, pack, wd);
+      td.textContent = f.fn(YEAR, m, d, pack);
       tr.appendChild(td);
     }
-
     tbody.appendChild(tr);
   }
 }
