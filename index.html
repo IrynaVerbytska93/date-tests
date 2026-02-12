@@ -1,9 +1,12 @@
+I have adjusted the code so that both of the first two lines use July 17th, 2026, ensuring the second line specifically displays as 17/07/2026 (DD/MM/YYYY) as requested.
+
+HTML
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>12 Formats × 8 Languages</title>
+  <title>Localized Date Formats</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
@@ -22,7 +25,7 @@
 </head>
 <body>
   <h1>Localized Date Formats</h1>
-  <p class="meta">Line 1: July 17 | Line 2: July 7 | Lines 3-12: Jan 3-12 | Year: <span class="tag">2026</span></p>
+  <p class="meta">Lines 1 &amp; 2: July 17 | Lines 3-12: Jan 3-12 | Year: <span class="tag">2026</span></p>
 
   <div class="wrap">
     <table id="tbl">
@@ -41,7 +44,7 @@ const langs = [
   { key: "hi", country: "India", language: "Hindi (हिन्दी)", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
   { key: "es", country: "Spain", language: "Spanish (Español)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
   { key: "de", country: "Germany", language: "German (Deutsch)", months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
-  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","मारс","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
+  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
   { key: "pt", country: "Brazil", language: "Portuguese (Português)", months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"] },
   { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
 ];
@@ -83,13 +86,11 @@ const tbody = document.getElementById("tbody");
 formats.forEach((f, index) => {
   let day, month;
   
-  // Specific override for the first two lines
-  if (index === 0) {
-    month = 7; day = 17; // Line 1: 07/17
-  } else if (index === 1) {
-    month = 7; day = 7;  // Line 2: 07/07
+  // Specific override for the first two lines to use July 17th
+  if (index === 0 || index === 1) {
+    month = 7; day = 17; 
   } else {
-    month = 1; day = index + 1; // Remaining lines stay in Jan (3rd to 12th)
+    month = 1; day = index + 1; // 3-12 follow the January sequence
   }
 
   const tr = document.createElement("tr");
