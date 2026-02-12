@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>12 Dates × 12 Formats × 8 Languages</title>
+  <title>12 Formats × 8 Languages</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
@@ -21,8 +21,8 @@
   </style>
 </head>
 <body>
-  <h1>12 unique dates in 12 formats &amp; 8 languages</h1>
-  <p class="meta">Dates: Jan 1st - Jan 12th | Germany &amp; Ukraine focus | Year: <span class="tag">2026</span></p>
+  <h1>Localized Date Formats</h1>
+  <p class="meta">Line 1: July 17 | Line 2: July 7 | Lines 3-12: Jan 3-12 | Year: <span class="tag">2026</span></p>
 
   <div class="wrap">
     <table id="tbl">
@@ -33,7 +33,6 @@
 
 <script>
 const YEAR = 2026;
-const MONTH = 1; // January only
 const pad2 = (n) => String(n).padStart(2, "0");
 
 const langs = [
@@ -42,7 +41,8 @@ const langs = [
   { key: "hi", country: "India", language: "Hindi (हिन्दी)", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
   { key: "es", country: "Spain", language: "Spanish (Español)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
   { key: "de", country: "Germany", language: "German (Deutsch)", months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
-  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
+  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","मारс","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
+  { key: "pt", country: "Brazil", language: "Portuguese (Português)", months: ["janeiro","fevereiro","março","abril","mayo","junio","julio","agosto","setembro","outubro","novembro","dezembro"] },
   { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
 ];
 
@@ -52,7 +52,6 @@ function shortMonth(pack, m) {
   return full.length <= 4 ? full : full.slice(0, 3) + ".";
 }
 
-// 12 Formats, each will be assigned to a specific day 1-12
 const formats = [
   { name: "1) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
   { name: "2) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
@@ -81,17 +80,25 @@ thead.appendChild(headerRow);
 
 const tbody = document.getElementById("tbody");
 
-// Loop through each format and assign it a unique day from 1 to 12
 formats.forEach((f, index) => {
-  const day = index + 1; // Day 1 for Format 1, Day 2 for Format 2, etc.
-  const tr = document.createElement("tr");
+  let day, month;
   
-  tr.innerHTML = `<td class="sticky mono">${pad2(MONTH)}/${pad2(day)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
+  // Specific override for the first two lines
+  if (index === 0) {
+    month = 7; day = 17; // Line 1: 07/17
+  } else if (index === 1) {
+    month = 7; day = 7;  // Line 2: 07/07
+  } else {
+    month = 1; day = index + 1; // Remaining lines stay in Jan (3rd to 12th)
+  }
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td class="sticky mono">${pad2(month)}/${pad2(day)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
   
   langs.forEach(p => {
     const td = document.createElement("td");
     td.className = "mono";
-    td.textContent = f.fn(YEAR, MONTH, day, p);
+    td.textContent = f.fn(YEAR, month, day, p);
     tr.appendChild(td);
   });
   
