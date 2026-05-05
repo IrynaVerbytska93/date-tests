@@ -1,29 +1,31 @@
-
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Localized Date Formats</title>
+  <title>24 Dates × 16 Formats × 11 Languages</title>
   <style>
     :root { color-scheme: light dark; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; }
     h1 { margin: 0 0 8px; font-size: 20px; }
     p { margin: 0 0 16px; opacity: 0.9; }
-    .wrap { overflow: auto; border: 1px solid rgba(127,127,127,.35); border-radius: 12px; }
-    table { border-collapse: collapse; width: 100%; min-width: 1200px; }
+    .wrap { overflow: auto; border: 1px solid rgba(127,127,127,.35); border-radius: 12px; height: 85vh; }
+    table { border-collapse: collapse; width: 100%; min-width: 1600px; }
     th, td { border-bottom: 1px solid rgba(127,127,127,.25); padding: 10px 12px; vertical-align: top; }
-    th { position: sticky; top: 0; background: Canvas; z-index: 2; text-align: left; }
-    .sticky { position: sticky; left: 0; background: Canvas; z-index: 3; }
-    .sticky2 { position: sticky; left: 210px; background: Canvas; z-index: 3; }
+    th { position: sticky; top: 0; background: Canvas; z-index: 5; text-align: left; box-shadow: inset 0 -1px 0 rgba(127,127,127,.35); }
+    .sticky { position: sticky; left: 0; background: Canvas; z-index: 4; }
+    .sticky2 { position: sticky; left: 110px; background: Canvas; z-index: 4; } /* Adjusted for width */
     .meta { font-size: 12px; opacity: .8; }
-    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35); font-size: 12px; opacity: .9; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35); font-size: 11px; opacity: .9; white-space: nowrap; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+    tr:hover td { background: rgba(127,127,127,0.05); }
   </style>
 </head>
 <body>
-  <h1>Localized Date Formats</h1>
-  <p class="meta">Lines 1 &amp; 2: July 17 | Lines 3-12: Jan 3-12 | Year: <span class="tag">2026</span></p>
+  <h1>24 dates in 16 formats &amp; 11 languages (Added Mexico)</h1>
+  <p class="meta">
+    Rule: 2 dates per month. Year: <span class="tag">2026</span> | Includes <strong>es-MX</strong> specific formatting.
+  </p>
 
   <div class="wrap">
     <table id="tbl">
@@ -34,74 +36,117 @@
 
 <script>
 const YEAR = 2026;
+
+const samples = [
+  { m: 1, d: 3 }, { m: 1, d: 15 }, { m: 2, d: 7 }, { m: 2, d: 18 },
+  { m: 3, d: 2 }, { m: 3, d: 20 }, { m: 4, d: 9 }, { m: 4, d: 21 },
+  { m: 5, d: 5 }, { m: 5, d: 16 }, { m: 6, d: 8 }, { m: 6, d: 24 },
+  { m: 7, d: 4 }, { m: 7, d: 14 }, { m: 8, d: 6 }, { m: 8, d: 19 },
+  { m: 9, d: 1 }, { m: 9, d: 12 }, { m: 10, d: 9 }, { m: 10, d: 28 },
+  { m: 11, d: 7 }, { m: 11, d: 17 }, { m: 12, d: 2 }, { m: 12, d: 23 },
+];
+
 const pad2 = (n) => String(n).padStart(2, "0");
+const ordinalEn = (n) => {
+  const s = ["th","st","nd","rd"], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+};
 
 const langs = [
-  { key: "en", country: "United States", language: "English", months: ["January","February","March","April","May","June","July","August","September","October","November","December"] },
-  { key: "zh", country: "China", language: "Mandarin (中文)", months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"] },
-  { key: "hi", country: "India", language: "Hindi (हिन्दी)", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
-  { key: "es", country: "Spain", language: "Spanish (Español)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"] },
-  { key: "de", country: "Germany", language: "German (Deutsch)", months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"] },
-  { key: "ar", country: "Saudi Arabia", language: "Arabic (العربية)", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
-  { key: "uk", country: "Ukraine", language: "Ukrainian (Українська)", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"] }
+  { key: "en", country: "United States", language: "English", months: ["January","February","March","April","May","June","July","August","September","October","November","December"], weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] },
+  { key: "es-MX", country: "Mexico", language: "Spanish (MX)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"], weekdays: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"] },
+  { key: "zh", country: "China", language: "Mandarin", months: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"], weekdays: ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"] },
+  { key: "hi", country: "India", language: "Hindi", months: ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"], weekdays: ["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"] },
+  { key: "es", country: "Spain", language: "Spanish (ES)", months: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"], weekdays: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"] },
+  { key: "fr", country: "France", language: "French", months: ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","نوفمبر","décembre"], weekdays: ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"] },
+  { key: "ar", country: "Saudi Arabia", language: "Arabic", months: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"], weekdays: ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"] },
+  { key: "bn", country: "Bangladesh", language: "Bengali", months: ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"], weekdays: ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"] },
+  { key: "pt", country: "Brazil", language: "Portuguese", months: ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"], weekdays: ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"] },
+  { key: "uk", country: "Ukraine", language: "Ukrainian", months: ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"], weekdays: ["неділя","понеділок","вівторок","середа","четвер","пʼятниця","субота"] },
+  { key: "ur", country: "Pakistan", language: "Urdu", months: ["جنوری","فروری","مارچ","اپریل","مئی","جون","جولائی","اگست","ستمبر","اکتوبر","نوفمبر","دسمبر"], weekdays: ["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"] }
 ];
 
 function shortMonth(pack, m) {
   const full = pack.months[m-1];
   if (pack.key === "zh") return full;
-  return full.length <= 4 ? full : full.slice(0, 3) + ".";
+  if (full.length <= 4) return full;
+  return full.slice(0, 3) + ".";
+}
+
+function weekdayIndexUTC(y, m, d) {
+  return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
 const formats = [
-  { name: "1) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
-  { name: "2) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
-  { name: "3) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
-  { name: "4) YYYY-MM-DD", fn: (y,m,d) => `${y}-${pad2(m)}-${pad2(d)}` },
-  { name: "5) MMMM DD, YYYY", fn: (y,m,d,p) => `${p.months[m-1]} ${pad2(d)}, ${y}` },
-  { name: "6) DD MMMM YYYY", fn: (y,m,d,p) => `${pad2(d)} ${p.months[m-1]} ${y}` },
-  { name: "7) DD-MMM-YYYY", fn: (y,m,d,p) => `${pad2(d)}-${shortMonth(p, m).replace('.','')}-${y}` },
-  { name: "8) MM-DD-YYYY", fn: (y,m,d) => `${pad2(m)}-${pad2(d)}-${y}` },
-  { name: "9) DD-MM-YY", fn: (y,m,d) => `${pad2(d)}-${pad2(m)}-${String(y).slice(-2)}` },
-  { name: "10) D/M/YYYY", fn: (y,m,d) => `${d}/${m}/${y}` },
+  { name: "1) ISO 8601", fn: (y,m,d) => `${y}-${pad2(m)}-${pad2(d)}` },
+  { name: "2) DD-MM-YYYY", fn: (y,m,d) => `${pad2(d)}-${pad2(m)}-${y}` },
+  { name: "3) MM/DD/YYYY", fn: (y,m,d) => `${pad2(m)}/${pad2(d)}/${y}` },
+  { name: "4) DD/MM/YYYY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${y}` },
+  { name: "5) YYYY/MM/DD", fn: (y,m,d) => `${y}/${pad2(m)}/${pad2(d)}` },
+  { name: "6) D MMM YYYY", fn: (y,m,d,pack) => `${d} ${shortMonth(pack, m)} ${y}` },
+  { name: "7) MMM D, YYYY", fn: (y,m,d,pack) => `${shortMonth(pack, m)} ${d}, ${y}` },
+  { name: "8) D MMMM YYYY", fn: (y,m,d,pack) => `${d} ${pack.months[m-1]} ${y}` },
+  { name: "9) Weekday, D MMMM YYYY", fn: (y,m,d,pack,wd) => `${pack.weekdays[wd]}, ${d} ${pack.months[m-1]} ${y}` },
+  { name: "10) MMMM D, YYYY", fn: (y,m,d,pack) => `${pack.months[m-1]} ${d}, ${y}` },
   { name: "11) YYYY.MM.DD", fn: (y,m,d) => `${y}.${pad2(m)}.${pad2(d)}` },
-  { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` }
+  { name: "12) DD.MM.YYYY", fn: (y,m,d) => `${pad2(d)}.${pad2(m)}.${y}` },
+  { name: "13) YYYYMMDD", fn: (y,m,d) => `${y}${pad2(m)}${pad2(d)}` },
+  { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` },
+  { name: "15) Ordinal (EN Only)", fn: (y,m,d,pack) => (pack.key === "en") ? `${pack.months[m-1]} ${ordinalEn(d)}, ${y}` : `${pack.months[m-1]} ${d}, ${y}` },
+  { name: "16) Mexico: DD/MM/YY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${String(y).slice(-2)}` },
 ];
 
 const thead = document.getElementById("thead");
 const headerRow = document.createElement("tr");
-headerRow.innerHTML = `<th class="sticky" style="min-width:210px">Date (month/day)</th><th class="sticky2" style="min-width:300px">Format</th>`;
-langs.forEach(l => {
+
+const thLabel = document.createElement("th");
+thLabel.className = "sticky";
+thLabel.style.width = "110px";
+thLabel.textContent = "Date (M/D)";
+headerRow.appendChild(thLabel);
+
+const thFormat = document.createElement("th");
+thFormat.className = "sticky2";
+thFormat.style.width = "220px";
+thFormat.textContent = "Format Name";
+headerRow.appendChild(thFormat);
+
+for (const pack of langs) {
   const th = document.createElement("th");
-  th.style.minWidth = "220px";
-  th.innerHTML = `<div><strong>${l.country}</strong></div><div class="meta">${l.language}</div>`;
+  th.style.minWidth = "200px";
+  th.innerHTML = `<div><strong>${pack.country}</strong></div><div class="meta">${pack.language}</div>`;
   headerRow.appendChild(th);
-});
+}
 thead.appendChild(headerRow);
 
 const tbody = document.getElementById("tbody");
 
-formats.forEach((f, index) => {
-  let day, month;
-  
-  // Specific override for the first two lines to use July 17th
-  if (index === 0 || index === 1) {
-    month = 7; day = 17; 
-  } else {
-    month = 1; day = index + 1; // 3-12 follow the January sequence
-  }
+for (const s of samples) {
+  const { m, d } = s;
+  const wd = weekdayIndexUTC(YEAR, m, d);
 
-  const tr = document.createElement("tr");
-  tr.innerHTML = `<td class="sticky mono">${pad2(month)}/${pad2(day)}</td><td class="sticky2"><span class="tag">${f.name}</span></td>`;
-  
-  langs.forEach(p => {
-    const td = document.createElement("td");
-    td.className = "mono";
-    td.textContent = f.fn(YEAR, month, day, p);
-    tr.appendChild(td);
-  });
-  
-  tbody.appendChild(tr);
-});
+  for (const f of formats) {
+    const tr = document.createElement("tr");
+
+    const tdLabel = document.createElement("td");
+    tdLabel.className = "sticky mono";
+    tdLabel.textContent = `${pad2(m)}/${pad2(d)}`;
+    tr.appendChild(tdLabel);
+
+    const tdFmt = document.createElement("td");
+    tdFmt.className = "sticky2";
+    tdFmt.innerHTML = `<span class="tag">${f.name}</span>`;
+    tr.appendChild(tdFmt);
+
+    for (const pack of langs) {
+      const td = document.createElement("td");
+      td.className = "mono";
+      td.textContent = f.fn(YEAR, m, d, pack, wd);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+}
 </script>
 </body>
 </html>
