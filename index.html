@@ -91,6 +91,8 @@ const formats = [
   { name: "14) D-M-YY", fn: (y,m,d) => `${d}-${m}-${String(y).slice(-2)}` },
   { name: "15) Ordinal (EN Only)", fn: (y,m,d,pack) => (pack.key === "en") ? `${pack.months[m-1]} ${ordinalEn(d)}, ${y}` : `${pack.months[m-1]} ${d}, ${y}` },
   { name: "16) Mexico: DD/MM/YY", fn: (y,m,d) => `${pad2(d)}/${pad2(m)}/${String(y).slice(-2)}` },
+  { name: "17) Spanish Long (de)", fn: (y,m,d,pack) => {const monthName = pack.months[m-1];return (pack.key.startsWith('es')) ? `${d} de ${monthName.slice(0,3)} de ${y}`: `${d} ${monthName.slice(0,3)} ${y}`;}
+}
 ];
 
 const thead = document.getElementById("thead");
